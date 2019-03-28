@@ -1,3 +1,4 @@
+#サイトのHTML要素によっては正常に動きません
 # coding: UTF-8
 import requests
 from bs4 import BeautifulSoup

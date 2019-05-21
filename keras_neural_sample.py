@@ -12,23 +12,23 @@ import matplotlib.pyplot as plt
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Activation#,advanced_activations
+from sklearn.metrics import confusion_matrix
 
 np.random.seed(0)
-X,y=sklearn.datasets.make_moons(500,noise=0.20)
+X,y=sklearn.datasets.make_moons(200,noise=0.20)
 plt.scatter(X[:,0], X[:,1], s=40, c=y, cmap=plt.cm.Spectral)
 
 
 model = Sequential()
 model.add(Dense(output_dim=6, input_dim=2))
-model.add(Activation('tanh')) #活性化関数の選定場所(sigmoid,softmax等)
+model.add(Activation('tanh'))#keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None)
 model.add(Dense(output_dim=2))
-model.compile(optimizer='Adam', loss='mse')
+model.compile(optimizer='Adam', loss='mse')#Optimizer 勾配更新方法
 
 
 x_train = X
 y_train = keras.utils.np_utils.to_categorical(y,2)#y_train = keras.utils.np_utils.to_categorical(y, nb_classes=2)より訂正
-model.fit(x=x_train, y=y_train, nb_epoch=2000)
-
+model.fit(x=x_train, y=y_train, nb_epoch=500)
 
 def plot_decision_boundary(pred_func):
     # Set min and max values and give it some padding
@@ -49,3 +49,6 @@ def predict(model, x_data):
     return np.argmax(y.data, axis=1) # 最大値となるインデックスを取得
 
 plot_decision_boundary(lambda x: predict(model, x))
+y_pre = predict(model, X)
+print(confusion_matrix(y,y_pre))
+

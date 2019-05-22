@@ -3,10 +3,13 @@
 """
 Created on Tue May 21 23:12:16 2019
 
-@author: not me
+@author: shoichi
 """
 
 import numpy as np
+import matplotlib as plt
+import pandas as pld
+import mglearn
 
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -16,6 +19,8 @@ from keras.layers.core import Dense, Activation
 from keras.utils import np_utils
 from sklearn import preprocessing
 from sklearn.metrics import confusion_matrix
+from pandas.plotting import scatter_matrix
+import time
 
 def build_multilayer_perceptron():
     """多層パーセプトロンモデルを構築"""
@@ -54,8 +59,16 @@ if __name__ == "__main__":
                   metrics=['accuracy'])
 
     # モデル訓練
+    start = time.time()
     model.fit(train_X, train_Y, nb_epoch=100, batch_size=1, verbose=1)
-
+    end=time.time() - start
+    print('処理時間')
+    print(end)
     # モデル評価
     loss, accuracy = model.evaluate(test_X, test_Y, verbose=0)
     print("Accuracy = {:.2f}".format(accuracy))
+    
+    iris_dataframe = pld.DataFrame(train_X, columns=iris.feature_names)
+    grr = scatter_matrix(iris_dataframe, c=train_Y, figsize=(15, 15), marker='o', hist_kwds={'bins': 20}, s=60, alpha=.8, cmap=mglearn.cm3)
+    plt.show()
+    
